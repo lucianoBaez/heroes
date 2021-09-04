@@ -2,6 +2,8 @@ package com.w2m.heroes.service;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.w2m.heroes.entity.Hero;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@CacheConfig(cacheNames = "heroCache")
 public class HeroService {
 
    private final HeroRepository heroRepository;
@@ -31,6 +34,7 @@ public class HeroService {
       return hero;
    }
 
+   @Cacheable
    public List<Hero> findAll() {
       log.info("finding all users");
       return heroRepository.findAll();
