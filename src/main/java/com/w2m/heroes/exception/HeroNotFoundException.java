@@ -2,7 +2,7 @@ package com.w2m.heroes.exception;
 
 public class HeroNotFoundException extends RuntimeException {
 
-   HeroNotFoundException(Long id) {
+   public HeroNotFoundException(Long id) {
       super("Could not find hero " + id);
    }
 }

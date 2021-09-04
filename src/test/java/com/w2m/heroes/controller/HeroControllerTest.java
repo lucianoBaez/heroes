@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -83,6 +84,17 @@ public class HeroControllerTest {
    }
 
    @Test
+   public void should_UpdateHero_When_ValidRequest() throws Exception {
+
+      when(heroService.update(any())).thenReturn(Hero.builder().id(33L).name("hero").build());
+      mockMvc
+            .perform(put("/api/hero").contentType(MediaType.APPLICATION_JSON).content("{ \"name\": \"hero\"}").accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(33))
+            .andExpect(jsonPath("$.name").value("hero"));
+   }
+
+   @Test
    public void should_GetHero_When_ValidRequest() throws Exception {
 
       Hero hero = Hero.builder().id(1L).name("myHero").build();
@@ -98,14 +110,18 @@ public class HeroControllerTest {
    @Test
    public void should_GetHeroByName_When_ValidRequest() throws Exception {
 
-      Hero hero = Hero.builder().id(1L).name("myHero").build();
-      when(heroService.findByName("hero")).thenReturn(hero);
+      List<Hero> list = Stream
+            .of(Hero.builder().id(1L).name("myHero").build(), Hero.builder().id(2L).name("myHero").build())
+            .collect(Collectors.toList());
+
+      when(heroService.findByName("hero")).thenReturn(list);
 
       ResultActions resultActions = mockMvc
             .perform(get("/api/hero/name/hero"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(1))
-            .andExpect(jsonPath("$.name").value("myHero"));
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].id").value(1))
+            .andExpect(jsonPath("$[1].id").value(2));
    }
 
    @Test

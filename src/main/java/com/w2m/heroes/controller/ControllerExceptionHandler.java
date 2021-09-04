@@ -13,9 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
-   @ResponseStatus(HttpStatus.NOT_FOUND) // 404
+   @ResponseStatus(HttpStatus.NOT_FOUND)
    @ExceptionHandler(HeroNotFoundException.class)
    public void handleNotFound(HeroNotFoundException ex) {
-      log.error("Requested account not found");
+      log.error("Requested hero not found");
    }
 }
