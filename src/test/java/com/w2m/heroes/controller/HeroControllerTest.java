@@ -52,8 +52,6 @@ public class HeroControllerTest {
 
    @Test
    public void should_CreateHero_When_ValidRequest() throws Exception {
-
-      when(heroService.createHero(any())).thenReturn(Hero.builder().name("hero").build());
       mockMvc
             .perform(post("/api/hero").contentType(MediaType.APPLICATION_JSON).content("{ \"name\": \"hero\"}").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated());
@@ -61,9 +59,6 @@ public class HeroControllerTest {
 
    @Test
    public void should_GetHero_When_ValidRequest() throws Exception {
-
-      Hero hero = Hero.builder().id(1L).name("myHero").build();
-      when(heroService.findHero(1L)).thenReturn(hero);
       mockMvc
             .perform(get("/api/hero/1").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
