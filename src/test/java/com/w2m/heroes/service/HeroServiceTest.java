@@ -55,6 +55,29 @@ public class HeroServiceTest {
    }
 
    @Test
+   public void test_update_existe_hero() {
+
+      Hero hero1 = Hero.builder().id(1L).name("hero").build();
+      when(repository.findById(1L)).thenReturn(Optional.of(hero1));
+
+      when(repository.save(any())).thenReturn(Hero.builder().id(1L).name("hero").build());
+      Hero hero = service.update(Hero.builder().id(1L).name("hero").build());
+
+      assertThat(hero).isNotNull();
+      assertThat(hero.getId()).isEqualTo(1L);
+   }
+
+   @Test
+   public void test_update_not_existe_hero() {
+
+      Hero hero1 = Hero.builder().id(1L).name("hero").build();
+      when(repository.findById(1L)).thenReturn(Optional.empty());
+
+      assertThatThrownBy(() -> service.update(hero1))
+            .isExactlyInstanceOf(HeroNotFoundException.class);
+   }
+
+   @Test
    public void test_delete_hero_exist() {
 
       Hero hero1 = Hero.builder().id(1L).name("hero").build();

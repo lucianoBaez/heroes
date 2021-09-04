@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.5.4'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'com.w2m'
@@ -44,4 +45,16 @@ test {
 	useJUnitPlatform()
 }
 
+jacoco {
+	toolVersion = "0.8.6"
+}
 
+// Jacoco test reports
+apply plugin: "jacoco"
+jacocoTestReport {
+	reports {
+		xml.enabled false
+		csv.enabled false
+		html.destination file("${buildDir}/jacocoHtml")
+	}
+}
