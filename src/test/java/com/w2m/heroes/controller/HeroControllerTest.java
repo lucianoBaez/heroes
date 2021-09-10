@@ -1,6 +1,6 @@
 package com.w2m.heroes.controller;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,6 +30,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.w2m.heroes.entity.Hero;
 import com.w2m.heroes.exception.HeroNotFoundException;
+import com.w2m.heroes.exception.HeroPreConditionException;
 import com.w2m.heroes.service.HeroService;
 
 @WebMvcTest
@@ -52,9 +53,7 @@ public class HeroControllerTest {
 
    @Test
    public void should_GetHeroes_valid_request() throws Exception {
-      List<Hero> list = Stream
-            .of(Hero.builder().id(1L).name("myHero").build(), Hero.builder().id(2L).name("myHero").build())
-            .collect(Collectors.toList());
+      List list = Arrays.asList(Hero.builder().id(1L).name("myHero").build(), Hero.builder().id(2L).name("myHero").build());
 
       when(heroService.findAll()).thenReturn(list);
 
@@ -64,7 +63,7 @@ public class HeroControllerTest {
 
    @Test
    public void should_GetHeroes_valid_request_emtpy() throws Exception {
-      List<Hero> list = new ArrayList<>();
+      List list = Arrays.asList();
 
       when(heroService.findAll()).thenReturn(list);
 
@@ -122,6 +121,13 @@ public class HeroControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].id").value(1))
             .andExpect(jsonPath("$[1].id").value(2));
+   }
+
+   @Test
+   public void should_Return412_When_NameIsBlank() throws Exception {
+
+      when(heroService.findByName(" ")).thenThrow(HeroPreConditionException.class);
+      mockMvc.perform(get("/api/hero/name/ ").accept(MediaType.APPLICATION_JSON)).andExpect(status().isPreconditionFailed());
    }
 
    @Test

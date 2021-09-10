@@ -20,6 +20,7 @@ import com.w2m.heroes.annotations.Loggable;
 import com.w2m.heroes.dto.HeroDto;
 import com.w2m.heroes.dto.mapper.HeroMapper;
 import com.w2m.heroes.entity.Hero;
+import com.w2m.heroes.exception.HeroPreConditionException;
 import com.w2m.heroes.service.HeroService;
 
 @RestController
@@ -55,12 +56,12 @@ public class HeroController {
    }
 
    @GetMapping(value = "/id/{id}")
-   HeroDto findById(@PathVariable(value = "id") Long id) {
+   HeroDto findByName(@PathVariable(value = "id") Long id) {
       return mapper.toDto(heroService.findById(id));
    }
 
    @GetMapping(value = "/name/{name}")
-   List<HeroDto> findById(@PathVariable(value = "name") String name) {
+   List<HeroDto> findByName(@PathVariable(value = "name") String name) {
       List<Hero> heroes = heroService.findByName(name);
       return heroes.stream().map(mapper::toDto).collect(toList());
    }

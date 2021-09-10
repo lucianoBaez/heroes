@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.w2m.heroes.entity.Hero;
 import com.w2m.heroes.exception.HeroNotFoundException;
+import com.w2m.heroes.exception.HeroPreConditionException;
 import com.w2m.heroes.repository.HeroRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,9 @@ public class HeroService {
 
    public List<Hero> findByName(String name) {
       log.info("finding user with name: {}", name);
+      if(name.isBlank()) {
+         throw new HeroPreConditionException();
+      }
       return heroRepository.findByNameContains(name);
    }
 
